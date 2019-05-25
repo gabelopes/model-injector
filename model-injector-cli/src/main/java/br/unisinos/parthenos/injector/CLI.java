@@ -1,6 +1,7 @@
 package br.unisinos.parthenos.injector;
 
-import br.unisinos.parthenos.injector.enumeration.SourceLanguage;
+import br.unisinos.parthenos.injector.pool.SourceLanguage;
+import br.unisinos.parthenos.injector.pool.SourceLanguagePool;
 import lombok.Getter;
 import lombok.Setter;
 import picocli.CommandLine.Parameters;
@@ -16,7 +17,7 @@ public class CLI {
   private File sourceFile;
 
   @Option(names = {"-l", "--language"}, required = true)
-  private SourceLanguage sourceLanguage;
+  private String sourceLanguage;
 
   @Option(names = {"-i", "--injection"}, required = true)
   private String injectionName;

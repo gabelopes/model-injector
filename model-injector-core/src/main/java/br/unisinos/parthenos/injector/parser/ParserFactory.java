@@ -2,10 +2,11 @@ package br.unisinos.parthenos.injector.parser;
 
 import br.unisinos.parthenos.injector.annotation.Language;
 import br.unisinos.parthenos.injector.annotation.Result;
-import br.unisinos.parthenos.injector.enumeration.SourceLanguage;
+import br.unisinos.parthenos.injector.pool.SourceLanguage;
 import br.unisinos.parthenos.injector.reflection.Instance;
 import org.reflections.Reflections;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class ParserFactory {
@@ -25,7 +26,7 @@ public class ParserFactory {
     final Language languageAnnotation = parserClass.getAnnotation(Language.class);
 
     return languageAnnotation != null
-        && languageAnnotation.value() == sourceLanguage;
+        && Objects.equals(languageAnnotation.value(), sourceLanguage.getName());
   }
 
   private static Class<? extends Parser> getParserClassFor(SourceLanguage sourceLanguage, Class<?> resultClass) {

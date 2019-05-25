@@ -2,10 +2,11 @@ package br.unisinos.parthenos.injector.io;
 
 import br.unisinos.parthenos.injector.annotation.Language;
 import br.unisinos.parthenos.injector.annotation.Target;
-import br.unisinos.parthenos.injector.enumeration.SourceLanguage;
+import br.unisinos.parthenos.injector.pool.SourceLanguage;
 import br.unisinos.parthenos.injector.reflection.Instance;
 import org.reflections.Reflections;
 
+import java.util.Objects;
 import java.util.Set;
 
 public class WriterFactory {
@@ -14,7 +15,7 @@ public class WriterFactory {
     final Target targetAnnotation = writerClass.getAnnotation(Target.class);
 
     return languageAnnotation != null
-        && languageAnnotation.value() == sourceLanguage
+        && Objects.equals(languageAnnotation.value(), sourceLanguage.getName())
         && targetAnnotation != null
         && targetAnnotation.value().equals(targetClass);
   }

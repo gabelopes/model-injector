@@ -1,7 +1,7 @@
 package br.unisinos.parthenos.injector;
 
 import br.unisinos.parthenos.injector.annotation.Target;
-import br.unisinos.parthenos.injector.enumeration.SourceLanguage;
+import br.unisinos.parthenos.injector.pool.SourceLanguage;
 import br.unisinos.parthenos.injector.injector.Injector;
 import br.unisinos.parthenos.injector.injector.InjectorFactory;
 import br.unisinos.parthenos.injector.injector.model.Model;
@@ -10,6 +10,7 @@ import br.unisinos.parthenos.injector.io.Writer;
 import br.unisinos.parthenos.injector.io.WriterFactory;
 import br.unisinos.parthenos.injector.parser.Parser;
 import br.unisinos.parthenos.injector.parser.ParserFactory;
+import br.unisinos.parthenos.injector.pool.SourceLanguagePool;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -20,13 +21,17 @@ import java.util.Set;
 @AllArgsConstructor
 public class Processor {
   private File sourceFile;
-  private SourceLanguage sourceLanguage;
+  private String sourceLanguage;
   private String injectionName;
   private Set<File> extensions;
   private String JSON;
 
+  private SourceLanguage translateSourceLanguage() {
+    return SourceLanguagePool.get(this.getSourceLanguage());
+  }
+
   private Class<? extends Injector> getInjectorClass() {
-    return InjectorFactory.getInjectorClassFor(this.getInjectionName(), this.getSourceLanguage());
+    return InjectorFactory.getInjectorClassFor(this.getInjectionName(), this.translateSourceLanguage());
   }
 
   private Class<? extends Model> getModelClass(Class<? extends Injector> injectorClass) {
@@ -50,10 +55,10 @@ public class Processor {
     final Target targetAnnotation = injector.getClass().getAnnotation(Target.class);
 
     if (targetAnnotation == null) {
-      return ParserFactory.getParserFor(this.getSourceLanguage());
+      return ParserFactory.getParserFor(this.translateSourceLanguage());
     }
 
-    return ParserFactory.getParserFor(this.getSourceLanguage(), targetAnnotation.value());
+    return ParserFactory.getParserFor(this.translateSourceLanguage(), targetAnnotation.value());
   }
 
   @SuppressWarnings("unchecked")
@@ -64,7 +69,7 @@ public class Processor {
   }
 
   private <T> Writer<T> getWriter(Class<T> targetClass) {
-    return WriterFactory.getWriterFor(this.getSourceLanguage(), targetClass);
+    return WriterFactory.getWriterFor(this.translateSourceLanguage(), targetClass);
   }
 
   @SuppressWarnings("unchecked")
