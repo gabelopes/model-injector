@@ -1,5 +1,6 @@
 package br.unisinos.parthenos.injector;
 
+import br.unisinos.parthenos.injector.exception.InjectorInstantiationException;
 import br.unisinos.parthenos.injector.injector.Injector;
 import br.unisinos.parthenos.injector.injector.model.Model;
 import com.jsoniter.JsonIterator;
@@ -21,7 +22,7 @@ public class Interpreter {
       final Constructor<? extends Injector> injectorConstructor = this.getInjectorClass().getConstructor(this.getModelClass());
       return injectorConstructor.newInstance(model);
     } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-      return null;
+      throw new InjectorInstantiationException(this.getInjectorClass(), model.getClass());
     }
   }
 

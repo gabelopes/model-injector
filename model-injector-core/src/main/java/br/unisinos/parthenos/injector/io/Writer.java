@@ -1,7 +1,8 @@
 package br.unisinos.parthenos.injector.io;
 
-import java.io.File;
+import br.unisinos.parthenos.injector.result.InjectResult;
+import br.unisinos.parthenos.injector.result.WriteResult;
 
 public interface Writer<T> {
-  boolean write(File sourceFile, T injectedSource);
+  WriteResult write(InjectResult<?> injectResult);
 }

@@ -1,16 +1,19 @@
 package br.unisinos.parthenos.injector;
 
+import br.unisinos.parthenos.injector.result.Result;
 import picocli.CommandLine;
 import picocli.CommandLine.MissingParameterException;
 
 public class Program {
   private static void process(CLI commandLineInterpreter) {
     final Processor processor = commandLineInterpreter.interpret();
-    final boolean succeeded = processor.process();
+    final Result<?> result = processor.process();
 
-    if (!succeeded) {
-      System.exit(1);
+    if (result.getOutput() != null) {
+      System.out.println(result.getOutput());
     }
+
+    System.exit(result.getStatus().getExitStatus());
   }
 
   public static void main(String[] args) {
@@ -19,7 +22,7 @@ public class Program {
       Program.process(commandLineInterpreter);
     } catch (MissingParameterException e) {
       System.out.println("Insufficient arguments!");
-      System.exit(2);
+      System.exit(-1);
     }
   }
 }
