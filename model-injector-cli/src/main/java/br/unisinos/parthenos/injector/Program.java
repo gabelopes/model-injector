@@ -10,7 +10,11 @@ public class Program {
     final Result<?> result = processor.process();
 
     if (result.getOutput() != null) {
-      System.out.println(result.getOutput());
+      if (result.getOutput() instanceof Exception) {
+        ((Exception) result.getOutput()).printStackTrace();
+      } else {
+        System.out.println(result.getOutput());
+      }
     }
 
     System.exit(result.getStatus().getExitStatus());
